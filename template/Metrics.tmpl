@@ -1,0 +1,19 @@
+apiVersion: grafana.monitoring.io/v1
+kind: GrafanaDashboard
+metadata:
+  name: {{.Name}}
+spec:
+  folder: 沪深股市
+  title: "{{.Code}}:{{.Title}}"
+  editable: true
+  rows:
+  - name: Overview
+    repeat: ""
+    panels:
+    - title: 股票价格
+      datasource: Prometheus
+      targets:
+      - query: stock_current_gauge{code="{{.Code}}"}
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph                                
