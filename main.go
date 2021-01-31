@@ -3,8 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/spf13/viper"
+	"log"
 	"time"
+
+	"github.com/linclaus/stock-daemon/pkg/grafana"
+	"github.com/linclaus/stock-daemon/pkg/kubernetes"
+	"github.com/linclaus/stock-daemon/pkg/prometheus"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -18,11 +23,21 @@ func main() {
 
 	flag.Parse()
 
+	initConfig()
+	kubernetes.Init()
+
 	ticker := time.NewTicker(time.Second * time.Duration(60))
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Println("heatbreak")
+			ie := prometheus.GetAggregateIncreaseExpr()
+			ie10 := prometheus.GetAggregate10IncreaseExpr()
+			de := prometheus.GetAggregateDecreaseExpr()
+			de10 := prometheus.GetAggregate10DecreaseExpr()
+			gd := grafana.MakeAggerationGrafanaDashboardResource("aggregation", "股市汇总", ie, ie10, de, de10)
+			if err := grafana.CreateOrUpdateGrafanaDashboard(gd); err != nil {
+				log.Println(err.Error())
+			}
 		}
 	}
 }

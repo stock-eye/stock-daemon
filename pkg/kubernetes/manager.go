@@ -13,12 +13,13 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer/yaml"
 
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 var k8sClient dynamic.Interface
 
-func init() {
-	config, err := clientcmd.BuildConfigFromFlags("http://localhost:8001", "")
+func Init() {
+	config, err := clientcmd.BuildConfigFromFlags(viper.GetString("K8S_MASTER"), "")
 	if err != nil {
 		logrus.Error("Build k8s config failed, err: ", err.Error())
 	}

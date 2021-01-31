@@ -43,7 +43,7 @@ func MakeAggerationGrafanaDashboardResource(name, title, increaseExpr, increaseE
 	})
 	gd := grafanav1.GrafanaDashboard{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "Aggregation",
+			Name:      name,
 			Namespace: "default",
 		},
 		TypeMeta: metav1.TypeMeta{

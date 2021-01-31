@@ -13,14 +13,14 @@ spec:
     - title: 上证指数成交量
       datasource: Prometheus
       targets:
-      - query: stock_trade_volume_total{code=\"sh000001\"}
+      - query: stock_trade_volume_total{code="sh000001"}
         legend: '{{`{{code}}: {{name}}`}}'
         ref: A
       type: graph
     - title: 深证成指成交量
       datasource: Prometheus
       targets:
-      - query: stock_trade_volume_total{code=\"sz399001\"}
+      - query: stock_trade_volume_total{code="sz399001"}
         legend: '{{`{{code}}: {{name}}`}}'
         ref: A
       type: graph  
