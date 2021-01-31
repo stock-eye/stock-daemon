@@ -20,4 +20,5 @@ func TestAggregation(t *testing.T) {
 	if err := CreateOrUpdateGrafanaDashboard(gd); err != nil {
 		log.Println(err.Error())
 	}
+	DeleteGrafanaDashboard("default", "aggregation")
 }
