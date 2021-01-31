@@ -11,8 +11,8 @@ image:
   tag: "latest"
 
 env:
-  - name: PROMETHEUS_HOST: 
-   value: "http://prometheus:9090"
+  - name: PROMETHEUS_HOST
+    value: "http://prometheus:9090"
 
 imagePullSecrets: []
 nameOverride: ""
