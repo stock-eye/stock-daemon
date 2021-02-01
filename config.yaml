@@ -1,3 +1,3 @@
 PROMETHEUS_HOST: "http://prometheus:9090"
 K8S_MASTER: ""
-GRAFANA_AGG_TEMPLATE: "/home/linclaus/work/golang/src/github.com/linclaus/stock-daemon/template/Aggregation.tmpl"
+GRAFANA_AGG_TEMPLATE: "template/Aggregation.tmpl"
