@@ -35,7 +35,6 @@ func main() {
 			de := prometheus.GetAggregateDecreaseExpr()
 			de10 := prometheus.GetAggregate10DecreaseExpr()
 			gd := grafana.MakeAggerationGrafanaDashboardResource("aggregation", "股市汇总", ie, ie10, de, de10)
-			grafana.DeleteGrafanaDashboard("default", "aggregation")
 			if err := grafana.CreateOrUpdateGrafanaDashboard(gd); err != nil {
 				log.Println(err.Error())
 			}
