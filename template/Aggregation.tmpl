@@ -72,14 +72,7 @@ spec:
       - query: idelta(stock_increase_histogram_bucket{}[10d])
         legend: '{{`{{le}}`}}'
         ref: A
-      type: bar
-    - title: 股票涨跌幅分布热力图
-      datasource: Prometheus
-      targets:
-      - query: idelta(stock_increase_histogram_bucket{}[10d])
-        legend: '{{`{{le}}`}}'
-        ref: A
-      type: heatmap     
+      type: bar     
 status:
   retryTimes: 0
   status: ""                     
