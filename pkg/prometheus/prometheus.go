@@ -21,19 +21,30 @@ type PrometheusVectorResponse struct {
 	} `json:"data"`
 }
 
+var codeMap = map[string][]string{}
+
 func GetAggregateIncreaseExpr() string {
 	codes := queryPrometheusForCodes("9.9<(max_over_time(stock_increase_gauge[10m])<10.1)%20and%20idelta(stock_increase_gauge[5m])==0")
+	if len(codes) == 0 {
+		codes = codeMap["ie"]
+	}
 	if len(codes) > 0 {
+		codeMap["ie"] = codes
 		cstr := strings.Join(codes, "|")
 		expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
 		return expr
 	}
+
 	return ""
 }
 
 func GetAggregateDecreaseExpr() string {
 	codes := queryPrometheusForCodes("-10.1<(min_over_time(stock_increase_gauge[10m])<-9.9)%20and%20idelta(stock_increase_gauge[5m])==0")
+	if len(codes) == 0 {
+		codes = codeMap["de"]
+	}
 	if len(codes) > 0 {
+		codeMap["de"] = codes
 		cstr := strings.Join(codes, "|")
 		expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
 		return expr
@@ -43,7 +54,11 @@ func GetAggregateDecreaseExpr() string {
 
 func GetAggregate10IncreaseExpr() string {
 	codes := queryPrometheusForCodes("-10.1<min_over_time(stock_increase_gauge[10m])<-9.9%20and%20stock_increase_gauge>-9")
+	if len(codes) == 0 {
+		codes = codeMap["10ie"]
+	}
 	if len(codes) > 0 {
+		codeMap["10ie"] = codes
 		cstr := strings.Join(codes, "|")
 		expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
 		return expr
@@ -53,7 +68,11 @@ func GetAggregate10IncreaseExpr() string {
 
 func GetAggregate10DecreaseExpr() string {
 	codes := queryPrometheusForCodes("10.1>max_over_time(stock_increase_gauge[10m])>9.9%20and%20stock_increase_gauge<9")
+	if len(codes) == 0 {
+		codes = codeMap["10de"]
+	}
 	if len(codes) > 0 {
+		codeMap["10de"] = codes
 		cstr := strings.Join(codes, "|")
 		expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
 		return expr
