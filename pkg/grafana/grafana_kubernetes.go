@@ -27,19 +27,22 @@ var GrafanaDashboardGroupVersionKind = schema.GroupVersionKind{
 	Kind:    "GrafanaDashboard",
 }
 
-func MakeAggerationGrafanaDashboardResource(name, title, increaseExpr, increaseExpr10m, decreaseExpr, decreaseExpr10m string) grafanav1.GrafanaDashboard {
+func MakeAggerationGrafanaDashboardResource(name, title, increaseExpr, increaseExpr10m, decreaseExpr, decreaseExpr10m, historyIncreaseExpr, historyDecreaseExpr, historySmoothExpr string) grafanav1.GrafanaDashboard {
 	t, err := template.ParseFiles(viper.GetString("GRAFANA_AGG_TEMPLATE"))
 	if err != nil {
 		panic(err)
 	}
 	buf := new(bytes.Buffer)
 	t.Execute(buf, map[string]string{
-		"Name":            name,
-		"Title":           title,
-		"IncreaseExpr":    increaseExpr,
-		"IncreaseExpr10m": increaseExpr10m,
-		"DecreaseExpr":    decreaseExpr,
-		"DecreaseExpr10m": decreaseExpr10m,
+		"Name":                name,
+		"Title":               title,
+		"IncreaseExpr":        increaseExpr,
+		"IncreaseExpr10m":     increaseExpr10m,
+		"DecreaseExpr":        decreaseExpr,
+		"DecreaseExpr10m":     decreaseExpr10m,
+		"HistoryIncreaseExpr": historyIncreaseExpr,
+		"HistoryDecreaseExpr": historyDecreaseExpr,
+		"HistorySmoothExpr":   historySmoothExpr,
 	})
 	gd := grafanav1.GrafanaDashboard{
 		ObjectMeta: metav1.ObjectMeta{

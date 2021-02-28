@@ -51,7 +51,28 @@ spec:
       - query: '{{.DecreaseExpr10m}}'
         legend: '{{`{{code}}: {{name}}`}}'
         ref: A
-      type: graph        
+      type: graph  
+    - title: 过去三个月处于反弹趋势个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.HistoryIncreaseExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph   
+    - title: 过去三个月处于回调趋势个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.HistoryDecreaseExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph   
+    - title: 过去三个月处于平滑趋势个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.HistorySmoothExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph  
     - title: 当前跌停个股
       datasource: Prometheus
       targets:

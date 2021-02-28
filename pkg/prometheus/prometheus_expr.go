@@ -80,6 +80,27 @@ func GetAggregate10DecreaseExpr() string {
 	return ""
 }
 
+func GetHistoryIncreaseExpr() string {
+	codes := codeMap["ics"]
+	cstr := strings.Join(codes, "|")
+	expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
+	return expr
+}
+
+func GetHistoryDecreaseExpr() string {
+	codes := codeMap["dcs"]
+	cstr := strings.Join(codes, "|")
+	expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
+	return expr
+}
+
+func GetHistorySmoothExpr() string {
+	codes := codeMap["scs"]
+	cstr := strings.Join(codes, "|")
+	expr := fmt.Sprintf("stock_increase_gauge{code=~\"%s\"}", cstr)
+	return expr
+}
+
 func queryPrometheusForCodes(queryString string) []string {
 	resp, err := http.Get(fmt.Sprintf(viper.GetString("PROMETHEUS_HOST")+"/api/v1/query?query=%s", queryString))
 	var codes []string

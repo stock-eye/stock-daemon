@@ -26,6 +26,8 @@ func main() {
 	initConfig()
 	kubernetes.Init()
 
+	go prometheus.LoadHistoryStockAggregation()
+
 	ticker := time.NewTicker(time.Second * time.Duration(60))
 	for {
 		select {
@@ -34,7 +36,10 @@ func main() {
 			ie10 := prometheus.GetAggregate10IncreaseExpr()
 			de := prometheus.GetAggregateDecreaseExpr()
 			de10 := prometheus.GetAggregate10DecreaseExpr()
-			gd := grafana.MakeAggerationGrafanaDashboardResource("aggregation", "股市汇总", ie, ie10, de, de10)
+			ics := prometheus.GetHistoryIncreaseExpr()
+			dcs := prometheus.GetHistoryDecreaseExpr()
+			scs := prometheus.GetHistorySmoothExpr()
+			gd := grafana.MakeAggerationGrafanaDashboardResource("aggregation", "股市汇总", ie, ie10, de, de10, ics, dcs, scs)
 			if err := grafana.CreateOrUpdateGrafanaDashboard(gd); err != nil {
 				log.Println(err.Error())
 			}
