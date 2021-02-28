@@ -96,7 +96,7 @@ func validateSeries(s series.Series) {
 	if (max-min)/min*100 > 40 && (max-current)/max > 10 && min != subMin {
 		codeIncreaseChan <- s.Name
 	}
-	if (max-min)/min < 10 {
+	if (max-min)/min*100 < 10 {
 		codeSmoothChan <- s.Name
 	}
 }
