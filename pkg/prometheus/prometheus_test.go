@@ -14,10 +14,13 @@ func init() {
 }
 
 func TestGetStockHistoryDataFrame(t *testing.T) {
-	LoadHistoryStockAggregation()
+	LoadHistoryStockAggregation("90d")
 	df := GetStockHistoryDataFrame(90)
-	df.Capply(validateColumn)
 	fmt.Println(df.Describe())
+}
+
+func TestGetAggregate10IncreaseExpr(t *testing.T) {
+	GetAggregate10IncreaseExpr("3d")
 }
 
 func Test1(t *testing.T) {

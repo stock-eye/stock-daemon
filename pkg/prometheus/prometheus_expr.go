@@ -52,8 +52,8 @@ func GetAggregateDecreaseExpr() string {
 	return ""
 }
 
-func GetAggregate10IncreaseExpr() string {
-	codes := queryPrometheusForCodes("-10.1<min_over_time(stock_increase_gauge[10m])<-9.9%20and%20stock_increase_gauge>-9")
+func GetAggregate10IncreaseExpr(duration string) string {
+	codes := queryPrometheusForCodes(fmt.Sprintf("-10.1<min_over_time(stock_increase_gauge[%s])<-9.9%%20and%%20stock_increase_gauge>-9", duration))
 	if len(codes) == 0 {
 		codes = codeMap["10ie"]
 	}
@@ -66,8 +66,8 @@ func GetAggregate10IncreaseExpr() string {
 	return ""
 }
 
-func GetAggregate10DecreaseExpr() string {
-	codes := queryPrometheusForCodes("10.1>max_over_time(stock_increase_gauge[10m])>9.9%20and%20stock_increase_gauge<9")
+func GetAggregate10DecreaseExpr(duration string) string {
+	codes := queryPrometheusForCodes(fmt.Sprintf("10.1>max_over_time(stock_increase_gauge[%s])>9.9%%20and%%20stock_increase_gauge<9", duration))
 	if len(codes) == 0 {
 		codes = codeMap["10de"]
 	}

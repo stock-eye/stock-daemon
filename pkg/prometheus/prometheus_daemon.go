@@ -33,18 +33,18 @@ func codeSmoothChanConsumer() {
 	codeMap["scs"] = scs
 }
 
-func LoadHistoryStockAggregation() {
-	doJob()
+func LoadHistoryStockAggregation(duration string) {
+	doJob(duration)
 	ticker := time.NewTicker(time.Hour * 24)
 	for {
 		select {
 		case <-ticker.C:
-			doJob()
+			doJob(duration)
 		}
 	}
 }
 
-func doJob() {
+func doJob(duration string) {
 	codeIncreaseChan = make(chan string, 100)
 	codeDecreaseChan = make(chan string, 100)
 	codeSmoothChan = make(chan string, 100)

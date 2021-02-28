@@ -26,16 +26,16 @@ func main() {
 	initConfig()
 	kubernetes.Init()
 
-	go prometheus.LoadHistoryStockAggregation()
+	go prometheus.LoadHistoryStockAggregation(viper.GetString("HISTORY_AGGREGATION_DURATION"))
 
 	ticker := time.NewTicker(time.Second * time.Duration(60))
 	for {
 		select {
 		case <-ticker.C:
 			ie := prometheus.GetAggregateIncreaseExpr()
-			ie10 := prometheus.GetAggregate10IncreaseExpr()
+			ie10 := prometheus.GetAggregate10IncreaseExpr(viper.GetString("AGGREGATION_DURATION"))
 			de := prometheus.GetAggregateDecreaseExpr()
-			de10 := prometheus.GetAggregate10DecreaseExpr()
+			de10 := prometheus.GetAggregate10DecreaseExpr(viper.GetString("AGGREGATION_DURATION"))
 			ics := prometheus.GetHistoryIncreaseExpr()
 			dcs := prometheus.GetHistoryDecreaseExpr()
 			scs := prometheus.GetHistorySmoothExpr()
