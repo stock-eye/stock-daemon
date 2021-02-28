@@ -38,14 +38,14 @@ spec:
         legend: '{{`{{code}}: {{name}}`}}'
         ref: A
       type: graph
-    - title: 过去十分钟处于跌停但现涨了1%
+    - title: 今日处于跌停但现涨了1%
       datasource: Prometheus
       targets:
       - query: '{{.IncreaseExpr10m}}'
         legend: '{{`{{code}}: {{name}}`}}'
         ref: A
       type: graph
-    - title: 过去十分钟处于涨停但现跌了1%
+    - title: 今日处于涨停但现跌了1%
       datasource: Prometheus
       targets:
       - query: '{{.DecreaseExpr10m}}'
