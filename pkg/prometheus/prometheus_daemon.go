@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/go-gota/gota/series"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -90,13 +91,13 @@ func validateSeries(s series.Series) {
 	sub := s.Subset(subSetIndexes)
 	subMin := sub.Min()
 	subMax := sub.Max()
-	if (max-min)/max*100 > 40 && (current-min)/min > 10 && max != subMax {
+	if (max-min)/max*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-min)/min > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && max != subMax {
 		codeDecreaseChan <- s.Name
 	}
-	if (max-min)/min*100 > 40 && (max-current)/max > 10 && min != subMin {
+	if (max-min)/min*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (max-current)/max > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && min != subMin {
 		codeIncreaseChan <- s.Name
 	}
-	if (max-min)/min*100 < 10 {
+	if (max-min)/min*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") {
 		codeSmoothChan <- s.Name
 	}
 }
