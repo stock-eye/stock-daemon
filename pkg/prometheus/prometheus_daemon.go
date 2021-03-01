@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/go-gota/gota/series"
@@ -78,6 +79,9 @@ func getHistoryStock(days int) {
 }
 
 func validateSeries(s series.Series) {
+	if strings.HasPrefix(s.Name, "sh000") {
+		return
+	}
 	min := s.Min()
 	max := s.Max()
 	current := s.Val(s.Len() - 1).(float64)
