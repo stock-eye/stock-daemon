@@ -86,7 +86,7 @@ func validateSeries(s series.Series) {
 	max := s.Max()
 	current := s.Val(s.Len() - 1).(float64)
 	subSetIndexes := make([]int, 0)
-	for i := s.Len() - 10; i < s.Len(); i++ {
+	for i := s.Len() - 5; i < s.Len(); i++ {
 		if i < 0 {
 			continue
 		}
