@@ -69,6 +69,9 @@ func getHistoryStock(days int) {
 		for _, r := range rsp.Data.Result {
 			s := series.New([]string{}, series.Float, r.Metric.Code)
 			for _, v := range r.Values {
+				if v[1] == "0" {
+					continue
+				}
 				s.Append(v[1])
 			}
 			validateSeries(s)
