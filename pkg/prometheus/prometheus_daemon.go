@@ -82,7 +82,7 @@ func getHistoryStock(days int) {
 }
 
 func validateSeries(s series.Series) {
-	if strings.HasPrefix(s.Name, "sh000") {
+	if strings.HasPrefix(s.Name, "sh000") || s.Len() < 5 {
 		return
 	}
 	min := s.Min()
