@@ -116,7 +116,7 @@ func validateSeries(s series.Series) {
 	if (max-min)/min*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (max-current)/max > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && min != backMin {
 		codeIncreaseChan <- s.Name
 	}
-	if (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (backMax-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") {
+	if (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") {
 		codeSmoothChan <- s.Name
 	}
 }
