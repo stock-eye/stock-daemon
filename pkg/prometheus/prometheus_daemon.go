@@ -88,23 +88,35 @@ func validateSeries(s series.Series) {
 	min := s.Min()
 	max := s.Max()
 	current := s.Val(s.Len() - 1).(float64)
-	subSetIndexes := make([]int, 0)
+
+	frontSetIndexes := make([]int, 0)
+	for i := 0; i < s.Len()-5; i++ {
+		if i < 0 {
+			continue
+		}
+		frontSetIndexes = append(frontSetIndexes, i)
+	}
+	frontSet := s.Subset(frontSetIndexes)
+	frontMin := frontSet.Min()
+	frontMax := frontSet.Max()
+
+	backSetIndexes := make([]int, 0)
 	for i := s.Len() - 5; i < s.Len(); i++ {
 		if i < 0 {
 			continue
 		}
-		subSetIndexes = append(subSetIndexes, i)
+		backSetIndexes = append(backSetIndexes, i)
 	}
-	sub := s.Subset(subSetIndexes)
-	subMin := sub.Min()
-	subMax := sub.Max()
-	if (max-min)/max*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-min)/min > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && max != subMax {
+	backSet := s.Subset(backSetIndexes)
+	backMin := backSet.Min()
+	backMax := backSet.Max()
+	if (max-min)/max*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-min)/min > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && max != backMax {
 		codeDecreaseChan <- s.Name
 	}
-	if (max-min)/min*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (max-current)/max > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && min != subMin {
+	if (max-min)/min*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (max-current)/max > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && min != backMin {
 		codeIncreaseChan <- s.Name
 	}
-	if (max-min)/min*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") {
+	if (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (backMax-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") {
 		codeSmoothChan <- s.Name
 	}
 }
