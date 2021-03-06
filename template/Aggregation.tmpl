@@ -1,0 +1,100 @@
+apiVersion: grafana.monitoring.io/v1
+kind: GrafanaDashboard
+metadata:
+  name: {{.Name}}
+spec:
+  folder: Aggregation
+  title: "{{.Title}}"
+  editable: true
+  rows:
+  - name: Overview
+    repeat: ""
+    panels:
+    - title: 上证指数成交量
+      datasource: Prometheus
+      targets:
+      - query: stock_trade_volume_total{code="sh000001"}
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph
+    - title: 深证成指成交量
+      datasource: Prometheus
+      targets:
+      - query: stock_trade_volume_total{code="sz399001"}
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph  
+    - title: 当前涨停数
+      datasource: Prometheus
+      targets:
+      - query: count(10.1>stock_increase_gauge>9.9)
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph
+    - title: 当前涨停个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.IncreaseExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph
+    - title: 今日处于跌停但现涨了1%
+      datasource: Prometheus
+      targets:
+      - query: '{{.IncreaseExpr10m}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph
+    - title: 今日处于涨停但现跌了1%
+      datasource: Prometheus
+      targets:
+      - query: '{{.DecreaseExpr10m}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph  
+    - title: 过去三个月处于反弹趋势个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.HistoryIncreaseExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph   
+    - title: 过去三个月处于回调趋势个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.HistoryDecreaseExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph   
+    - title: 过去三个月处于平滑趋势个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.HistorySmoothExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph  
+    - title: 当前跌停个股
+      datasource: Prometheus
+      targets:
+      - query: '{{.DecreaseExpr}}'
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph        
+    - title: 当前跌停数
+      datasource: Prometheus
+      targets:
+      - query: count(-10.1<stock_increase_gauge<-9.9)
+        legend: '{{`{{code}}: {{name}}`}}'
+        ref: A
+      type: graph  
+    - title: 股票涨跌幅分布直方图
+      datasource: Prometheus
+      targets:
+      - query: idelta(stock_increase_histogram_bucket{}[10d])
+        legend: '{{`{{le}}`}}'
+        ref: A
+      type: bar     
+status:
+  retryTimes: 0
+  status: ""                     
+                      
