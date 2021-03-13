@@ -112,16 +112,16 @@ func filterSeries(s series.Series) {
 	backSet := s.Subset(backSetIndexes)
 	backMin := backSet.Min()
 	backMax := backSet.Max()
-	if (frontMax-min)/frontMax*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-backMin)/backMin > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
-		logrus.Infof("Add code: %s to decrease code set\n", s.Name)
+	if (frontMax-min)/frontMax*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
+		logrus.Infof("Add code: %s to decrease code set", s.Name)
 		codeDecreaseChan <- s.Name
 	}
-	if (max-frontMin)/frontMin*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (backMax-current)/backMax > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
-		logrus.Infof("Add code: %s to increase code set\n", s.Name)
+	if (max-frontMin)/frontMin*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (backMax-current)/backMax*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
+		logrus.Infof("Add code: %s to increase code set", s.Name)
 		codeIncreaseChan <- s.Name
 	}
 	if (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_REBOUND_THRESHOLD") {
-		logrus.Infof("Add code: %s to smooth_increase code set\n", s.Name)
+		logrus.Infof("Add code: %s to smooth_increase code set", s.Name)
 		codeSmoothChan <- s.Name
 	}
 }
