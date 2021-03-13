@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-gota/gota/series"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -64,6 +65,7 @@ func getHistoryStock(days int) {
 	today, _ := time.Parse("2006-01-02", todayStr)
 	end := today.Add(time.Hour * 7)
 	start := end.AddDate(0, 0, -1*days)
+	logrus.Infof("Query Prometheus start: %s, end: %s\n", start.Format(timeFormat), end.Format(timeFormat))
 	rsp, err := queryRange("stock_current_gauge{}", start.Format(timeFormat), end.Format(timeFormat), "1d")
 	if err == nil || rsp.Status == "success" {
 		for _, r := range rsp.Data.Result {
@@ -111,12 +113,15 @@ func filterSeries(s series.Series) {
 	backMin := backSet.Min()
 	backMax := backSet.Max()
 	if (max-min)/max*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-min)/min > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && max != backMax {
+		logrus.Infof("Add code: %s to decrease code set\n", s.Name)
 		codeDecreaseChan <- s.Name
 	}
 	if (max-min)/min*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (max-current)/max > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") && min != backMin {
+		logrus.Infof("Add code: %s to increase code set\n", s.Name)
 		codeIncreaseChan <- s.Name
 	}
 	if (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_REBOUND_THRESHOLD") {
+		logrus.Infof("Add code: %s to smooth_increase code set\n", s.Name)
 		codeSmoothChan <- s.Name
 	}
 }
