@@ -101,6 +101,7 @@ func filterSeries(s series.Series) {
 	frontSet := s.Subset(frontSetIndexes)
 	frontMin := frontSet.Min()
 	frontMax := frontSet.Max()
+	frontMean := frontSet.Mean()
 
 	backSetIndexes := make([]int, 0)
 	for i := s.Len() - 5; i < s.Len(); i++ {
@@ -112,11 +113,12 @@ func filterSeries(s series.Series) {
 	backSet := s.Subset(backSetIndexes)
 	backMin := backSet.Min()
 	backMax := backSet.Max()
-	if frontMax == max && (frontMax-min)/frontMax*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
+	backMean := backSet.Mean()
+	if frontMean > backMean && frontMax == max && (frontMax-min)/frontMax*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
 		logrus.Infof("Add code: %s to increase code set for history decrease: %.1f and current increase: %.1f", s.Name, (frontMax-min)/frontMax*100, (current-backMin)/backMin*100)
 		codeIncreaseChan <- s.Name
 	}
-	if frontMin == min && (max-frontMin)/frontMin*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (backMax-current)/backMax*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
+	if frontMean < backMean && frontMin == min && (max-frontMin)/frontMin*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (backMax-current)/backMax*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
 		logrus.Infof("Add code: %s to decrease code set for history increase: %.1f and current decrease: %.1f", s.Name, (max-frontMin)/frontMin*100, (backMax-current)/backMax*100)
 		codeDecreaseChan <- s.Name
 	}
