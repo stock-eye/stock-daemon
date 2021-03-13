@@ -115,15 +115,15 @@ func filterSeries(s series.Series) {
 	backMax := backSet.Max()
 	backMean := backSet.Mean()
 	if frontMean > backMean && frontMax == max && (frontMax-min)/frontMax*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
-		logrus.Infof("Add code: %s to increase code set for history decrease: %.1f and current increase: %.1f", s.Name, (frontMax-min)/frontMax*100, (current-backMin)/backMin*100)
+		logrus.Infof("Add code: %s to increase code set for history decrease: %.1f,mean: %.1f and current increase: %.1f,mean: %.1f", s.Name, (frontMax-min)/frontMax*100, frontMean, (current-backMin)/backMin*100, backMean)
 		codeIncreaseChan <- s.Name
 	}
 	if frontMean < backMean && frontMin == min && (max-frontMin)/frontMin*100 > viper.GetFloat64("HISTORY_WAVE_THRESHOLD") && (backMax-current)/backMax*100 > viper.GetFloat64("HISTORY_REBOUND_THRESHOLD") {
-		logrus.Infof("Add code: %s to decrease code set for history increase: %.1f and current decrease: %.1f", s.Name, (max-frontMin)/frontMin*100, (backMax-current)/backMax*100)
+		logrus.Infof("Add code: %s to decrease code set for history increase: %.1f,mean: %.1f and current decrease: %.1f,mean: %.1f", s.Name, (max-frontMin)/frontMin*100, frontMean, (backMax-current)/backMax*100, backMean)
 		codeDecreaseChan <- s.Name
 	}
-	if (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_REBOUND_THRESHOLD") {
-		logrus.Infof("Add code: %s to smooth_increase code set for history wave: %.1f and current increase: %.1f", s.Name, (frontMax-frontMin)/frontMin*100, (current-backMin)/backMin*100)
+	if frontMean < backMean && (frontMax-frontMin)/frontMin*100 < viper.GetFloat64("SMOOTH_WAVE_THRESHOLD") && (current-backMin)/backMin*100 > viper.GetFloat64("SMOOTH_REBOUND_THRESHOLD") {
+		logrus.Infof("Add code: %s to smooth_increase code set for history wave: %.1f,mean: %.1f and current increase: %.1f,mean: %.1f", s.Name, (frontMax-frontMin)/frontMin*100, frontMean, (current-backMin)/backMin*100, backMean)
 		codeSmoothChan <- s.Name
 	}
 }
