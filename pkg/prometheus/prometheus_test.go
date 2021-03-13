@@ -11,10 +11,10 @@ import (
 
 func init() {
 	viper.Set("PROMETHEUS_HOST", "http://192.168.1.27:30090")
-	viper.Set("HISTORY_WAVE_THRESHOLD", "20")
+	viper.Set("HISTORY_WAVE_THRESHOLD", "40")
 	viper.Set("HISTORY_REBOUND_THRESHOLD", "10")
 	viper.Set("SMOOTH_WAVE_THRESHOLD", "10")
-	viper.Set("SMOOTH_REBOUND_THRESHOLD", "20")
+	viper.Set("SMOOTH_REBOUND_THRESHOLD", "10")
 }
 
 func TestGetStockHistoryDataFrame(t *testing.T) {
