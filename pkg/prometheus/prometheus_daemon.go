@@ -74,14 +74,14 @@ func getHistoryStock(days int) {
 				}
 				s.Append(v[1])
 			}
-			validateSeries(s)
+			filterSeries(s)
 		}
 	} else {
 		log.Println(err.Error())
 	}
 }
 
-func validateSeries(s series.Series) {
+func filterSeries(s series.Series) {
 	if strings.HasPrefix(s.Name, "sh000") || s.Len() < 5 {
 		return
 	}
