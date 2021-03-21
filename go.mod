@@ -9,6 +9,7 @@ require (
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/linclaus/grafana-operator v0.0.0-20210124024501-b37e5ca5caa0
 	github.com/prometheus/common v0.4.1
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1 // indirect

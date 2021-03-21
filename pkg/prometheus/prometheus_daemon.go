@@ -8,6 +8,7 @@ import (
 	"github.com/go-gota/gota/series"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"github.com/robfig/cron/v3"
 )
 
 var (
@@ -38,13 +39,14 @@ func codeSmoothChanConsumer() {
 
 func LoadHistoryStockAggregation(duration string) {
 	doJob(duration)
-	ticker := time.NewTicker(time.Hour * 24)
-	for {
-		select {
-		case <-ticker.C:
-			doJob(duration)
-		}
-	}
+	timezone, _ := time.LoadLocation("Asia/Shanghai")
+	c := cron.New(cron.WithLocation(timezone))
+	c.AddFunc("0 15 * * *",func(){
+		logrus.Info("Start to compute aggregation")
+		doJob(duration)
+		logrus.Info("End to compute aggregation")
+	})
+	c.Start()
 }
 
 func doJob(duration string) {
