@@ -41,7 +41,7 @@ func LoadHistoryStockAggregation(duration string) {
 	doJob(duration)
 	timezone, _ := time.LoadLocation("Asia/Shanghai")
 	c := cron.New(cron.WithLocation(timezone))
-	c.AddFunc("0 15 * * *",func(){
+	c.AddFunc("0 9,15 * * *",func(){
 		logrus.Info("Start to compute aggregation")
 		doJob(duration)
 		logrus.Info("End to compute aggregation")
@@ -67,7 +67,7 @@ func getHistoryStock(days int) {
 	today, _ := time.Parse("2006-01-02", todayStr)
 	end := today.Add(time.Hour * 7)
 	start := end.AddDate(0, 0, -1*days)
-	logrus.Infof("Query Prometheus start: %s, end: %s\n", start.Format(timeFormat), end.Format(timeFormat))
+	logrus.Infof("Query Prometheus start: %s, end: %s", start.Format(timeFormat), end.Format(timeFormat))
 	rsp, err := queryRange("stock_current_gauge{}", start.Format(timeFormat), end.Format(timeFormat), "1d")
 	if err == nil || rsp.Status == "success" {
 		for _, r := range rsp.Data.Result {
@@ -86,6 +86,7 @@ func getHistoryStock(days int) {
 }
 
 func filterSeries(s series.Series) {
+	logrus.Infof("filter code: %s",s.Name)
 	if strings.HasPrefix(s.Name, "sh000") || s.Len() < 5 {
 		return
 	}
