@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/go-gota/gota/series"
+	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/robfig/cron/v3"
 )
 
 var (
@@ -20,28 +20,34 @@ func codeIncreaseChanConsumer() {
 	for code := range codeIncreaseChan {
 		ics = append(ics, code)
 	}
-	codeMap["ics"] = ics
+	if len(ics) != 0 {
+		codeMap["ics"] = ics
+	}
 }
 func codeDecreaseChanConsumer() {
 	dcs := make([]string, 0)
 	for code := range codeDecreaseChan {
 		dcs = append(dcs, code)
 	}
-	codeMap["dcs"] = dcs
+	if len(dcs) != 0 {
+		codeMap["dcs"] = dcs
+	}
 }
 func codeSmoothChanConsumer() {
 	scs := make([]string, 0)
 	for code := range codeSmoothChan {
 		scs = append(scs, code)
 	}
-	codeMap["scs"] = scs
+	if len(scs) != 0 {
+		codeMap["scs"] = scs
+	}
 }
 
 func LoadHistoryStockAggregation(duration string) {
 	doJob(duration)
 	timezone, _ := time.LoadLocation("Asia/Shanghai")
 	c := cron.New(cron.WithLocation(timezone))
-	c.AddFunc("0 9,15 * * *",func(){
+	c.AddFunc("0 9,15 * * *", func() {
 		logrus.Info("Start to compute aggregation")
 		doJob(duration)
 		logrus.Info("End to compute aggregation")
@@ -86,7 +92,7 @@ func getHistoryStock(days int) {
 }
 
 func filterSeries(s series.Series) {
-	logrus.Infof("filter code: %s",s.Name)
+	logrus.Infof("filter code: %s", s.Name)
 	if strings.HasPrefix(s.Name, "sh000") || s.Len() < 5 {
 		return
 	}
